@@ -1,0 +1,6 @@
+Python server to serve as website at  http://localhost:8000/hello.html:
+python -m http.server 8000
+
+
+Build simple WASM from C++:
+emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]'
