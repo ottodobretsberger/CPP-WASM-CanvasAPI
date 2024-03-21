@@ -1,18 +1,28 @@
 #include <emscripten.h>
 #include <cstdlib> // for rand() and srand()
 #include <ctime>   // for time()
-#include <cstdio>  // for snprintf()
 
-// Function to convert integer to hexadecimal string
-void intToHex(int value, char* result) {
-    static const char* digits = "0123456789ABCDEF";
-    result[0] = digits[(value >> 20) & 0xF];
-    result[1] = digits[(value >> 16) & 0xF];
-    result[2] = digits[(value >> 12) & 0xF];
-    result[3] = digits[(value >> 8) & 0xF];
-    result[4] = digits[(value >> 4) & 0xF];
-    result[5] = digits[value & 0xF];
-    result[6] = '\0';
+// Function to convert integer to string
+void intToString(int value, char* result) {
+    // Handle negative values
+    if (value < 0) {
+        *result++ = '-';
+        value = -value;
+    }
+    
+    // Convert digits to characters in reverse order
+    char buffer[20]; // Buffer to store the digits
+    int index = 0;
+    do {
+        buffer[index++] = value % 10 + '0';
+        value /= 10;
+    } while (value > 0);
+    
+    // Copy the digits in reverse order to the result string
+    while (index > 0) {
+        *result++ = buffer[--index];
+    }
+    *result = '\0'; // Null-terminate the string
 }
 
 // Exported function to draw random rectangles
@@ -35,9 +45,16 @@ extern "C" {
             int width = rand() % 50 + 20;     // Random width between 20 and 70
             int height = rand() % 50 + 20;    // Random height between 20 and 70
 
-            // Generate a random color
-            char color[8]; // 7 characters for RGB hex code + null terminator
-            intToHex(rand() % 0xFFFFFF, color);
+            // Generate a random color in RGB format
+            char color[20]; // Sufficient size for the color string
+            color[0] = 'r'; color[1] = 'g'; color[2] = 'b'; color[3] = '(';
+            intToString(rand() % 256, color + 4); // Red component
+            color[5] = ',';
+            intToString(rand() % 256, color + 6); // Green component
+            color[8] = ',';
+            intToString(rand() % 256, color + 9); // Blue component
+            color[11] = ')';
+            color[12] = '\0';
 
             drawRectangleOnCanvas(x, y, width, height, color);
         }

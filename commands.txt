@@ -19,5 +19,10 @@ git pull
 - keep index.html
 - wasm builds just the JS file and WASM file
 - use incognito window for http://localhost:8000/  to avoid caching
+-------------------------------------------------------------------------
 
+GIT COMMANDS:
+git add .
+git commit -m "100 rectangles in black"
+git push -u origin master
 

@@ -964,7 +964,7 @@ function dbg(...args) {
 // === Body ===
 
 var ASM_CONSTS = {
-  65564: ($0, $1, $2, $3, $4) => { var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = UTF8ToString($4); ctx.fillRect($0, $1, $2, $3); }
+  65542: ($0, $1, $2, $3, $4) => { var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = UTF8ToString($4); ctx.fillRect($0, $1, $2, $3); }
 };
 
 // end include: preamble.js
