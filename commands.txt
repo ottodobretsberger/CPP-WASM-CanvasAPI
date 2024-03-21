@@ -1,6 +1,23 @@
-Python server to serve as website at  http://localhost:8000/hello.html:
+Python server to serve as website at  http://localhost:8000/
+
 python -m http.server 8000
 
 
 Build simple WASM from C++:
-emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]'
+emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXPORTED_RUNTIME_METHODS='["ccall"]'
+
+------------------------
+inside emsdk directory:
+------------------------
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+git pull
+./emsdk install latest
+./emsdk activate latest
+
+--> then switch to the directory for input and putput files
+
+- keep index.html
+- wasm builds just the JS file and WASM file
+- use incognito window for http://localhost:8000/  to avoid caching
+
+

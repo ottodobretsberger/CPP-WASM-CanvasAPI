@@ -337,7 +337,7 @@ var wasmBinary;
 if (Module['wasmBinary']) wasmBinary = Module['wasmBinary'];legacyModuleProp('wasmBinary', 'wasmBinary');
 
 if (typeof WebAssembly != 'object') {
-  abort('no native wasm support detected');
+  err('no native wasm support detected');
 }
 
 // Wasm globals
@@ -964,7 +964,7 @@ function dbg(...args) {
 // === Body ===
 
 var ASM_CONSTS = {
-  65541: ($0, $1, $2, $3) => { var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = 'red'; ctx.fillRect($0, $1, $2, $3); }
+  65564: ($0, $1, $2, $3, $4) => { var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = UTF8ToString($4); ctx.fillRect($0, $1, $2, $3); }
 };
 
 // end include: preamble.js
@@ -1081,6 +1081,8 @@ var ASM_CONSTS = {
   var _emscripten_asm_const_int = (code, sigPtr, argbuf) => {
       return runEmAsmFunction(code, sigPtr, argbuf);
     };
+
+  var _emscripten_date_now = () => Date.now();
 
   var getCFunc = (ident) => {
       var func = Module['_' + ident]; // closure exported function
@@ -1311,11 +1313,14 @@ function checkIncomingModuleAPI() {
 }
 var wasmImports = {
   /** @export */
-  emscripten_asm_const_int: _emscripten_asm_const_int
+  emscripten_asm_const_int: _emscripten_asm_const_int,
+  /** @export */
+  emscripten_date_now: _emscripten_date_now
 };
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors');
 var _drawRectangleOnCanvas = Module['_drawRectangleOnCanvas'] = createExportWrapper('drawRectangleOnCanvas');
+var _drawRandomRectangles = Module['_drawRandomRectangles'] = createExportWrapper('drawRandomRectangles');
 var _fflush = createExportWrapper('fflush');
 var _emscripten_stack_init = () => (_emscripten_stack_init = wasmExports['emscripten_stack_init'])();
 var _emscripten_stack_get_free = () => (_emscripten_stack_get_free = wasmExports['emscripten_stack_get_free'])();
