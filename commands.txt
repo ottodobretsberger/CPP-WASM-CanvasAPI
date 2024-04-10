@@ -1,11 +1,3 @@
-Python server to serve as website at  http://localhost:8000/
-
-python -m http.server 8000
-
-
-Build simple WASM from C++:
-emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXPORTED_RUNTIME_METHODS='["ccall"]'
-
 ------------------------
 inside emsdk directory:
 ------------------------
@@ -16,13 +8,23 @@ git pull
 
 --> then switch to the directory for input and putput files
 
+Build simple WASM from C++:
+emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXPORTED_RUNTIME_METHODS='["ccall"]'
+
+Python server to serve as website at  http://localhost:8000/
+python -m http.server 8000
+
 - keep index.html
 - wasm builds just the JS file and WASM file
 - use incognito window for http://localhost:8000/  to avoid caching
+SHIFT refresh to avoid caching
 -------------------------------------------------------------------------
 
 GIT COMMANDS:
 git add .
-git commit -m "100 rectangles in black"
+git commit -m "message"
 git push -u origin master
+
+UNDO:
+git reset --hard HEAD
 

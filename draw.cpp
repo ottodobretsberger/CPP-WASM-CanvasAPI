@@ -42,19 +42,19 @@ extern "C" {
         for (int i = 0; i < numRectangles; ++i) {
             int x = rand() % canvasWidth;     // Random x-coordinate
             int y = rand() % canvasHeight;    // Random y-coordinate
-            int width = rand() % 50 + 20;     // Random width between 20 and 70
-            int height = rand() % 50 + 20;    // Random height between 20 and 70
+            int width = rand() % 50 + 10 ;     // Random width between 10 and 70
+            int height = rand() % 50 + 10;    // Random height between 10 and 70
 
             // Generate a random color in RGB format
             char color[20]; // Sufficient size for the color string
             color[0] = 'r'; color[1] = 'g'; color[2] = 'b'; color[3] = '(';
             intToString(rand() % 256, color + 4); // Red component
-            color[5] = ',';
-            intToString(rand() % 256, color + 6); // Green component
-            color[8] = ',';
-            intToString(rand() % 256, color + 9); // Blue component
-            color[11] = ')';
-            color[12] = '\0';
+            color[6] = ',';
+            intToString(rand() % 256, color + 7); // Green component
+            color[9] = ',';
+            intToString(rand() % 256, color + 10); // Blue component
+            color[12] = ')';
+            color[13] = '\0';
 
             drawRectangleOnCanvas(x, y, width, height, color);
         }
