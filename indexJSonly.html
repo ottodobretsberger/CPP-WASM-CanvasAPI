@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Example</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas>
+    <script>
+        function drawRectangles() {
+            for(let i = 0; i < 3200; i+=4)
+            {
+                for(let j = 0; j < 1600; j+=4)
+                {
+                    let width = 3;
+                    let height = 3;
+                    let color = 'rgb(0,0,0)';
+
+                    var canvas = document.getElementById('myCanvas');
+                    var ctx = canvas.getContext('2d');
+                    ctx.fillStyle = color;
+                    ctx.fillRect(i, j, width, height);
+                }
+            }
+        }
+    </script>
+    <button onclick="drawRectangles()">Draw Rectangle</button>
+</body>
+</html>
