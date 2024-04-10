@@ -6,11 +6,11 @@
     <title>Canvas Example</title>
 </head>
 <body>
-    <canvas id="myCanvas" width="800" height="800" style="border:1px solid black;"></canvas>
+    <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas>
     <script src="draw.js"></script>
     <script>
         function drawRectangles() {
-            Module.ccall('drawRandomRectangles', 'void', ['number', 'number', 'number'], [100, 800, 800]);
+            Module.ccall('drawRandomRectangles', 'void', ['number', 'number', 'number'], [100, 3200, 1600]);
         }
     </script>
     <button onclick="drawRectangles()">Draw Rectangle</button>
