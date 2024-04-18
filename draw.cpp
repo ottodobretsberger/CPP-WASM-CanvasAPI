@@ -40,17 +40,17 @@ extern "C" {
             ctx.fillRect($0, $1, $2, $3);
         }, x, y, width, height, color);
     }
-    EMSCRIPTEN_KEEPALIVE void drawRectangleOnCanvas2(int x, int y, int width, int height, int color) {
+    EMSCRIPTEN_KEEPALIVE void drawRectangleOnCanvas2(int x, int y, int width, int height, int r, int g, int b) {
         EM_ASM_({
             // if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + $4);
             var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
 
-            var rgbValue = Math.floor(255 * $4);
-            ctx.fillStyle = 'rgb(' + rgbValue + ',' + rgbValue + ',' + rgbValue + ')';
+            // var rgbValue = Math.floor(255 * $4);
+            ctx.fillStyle = 'rgb(' + $4 + ',' + $5 + ',' + $6 + ')';
             // if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + ctx.fillStyle);
             ctx.fillRect($0, $1, $2, $3);
-        }, x, y, width, height, color);
+        }, x, y, width, height, r, g, b);
     }
 
     EMSCRIPTEN_KEEPALIVE void drawRandomRectangles(int numRectangles, int canvasWidth, int canvasHeight) {
@@ -105,6 +105,21 @@ extern "C" {
         return n;
     }
 
+    EMSCRIPTEN_KEEPALIVE std::vector<int> escapeTimeToRGB(int escapeTime, int maxIterations) {
+    if (escapeTime == maxIterations) {
+        // Point is inside the Mandelbrot set, color it black
+        return {0, 0, 0};
+    } else {
+        // Map escape time to a color gradient
+        double t = static_cast<double>(escapeTime) / maxIterations;
+        // Example: Linear gradient from blue to white
+        int red = static_cast<int>(255 * (1 - t));
+        int green = static_cast<int>(255 * (1 - t));
+        int blue = static_cast<int>(255 * t);
+        return {red, green, blue};
+    }
+}
+
     EMSCRIPTEN_KEEPALIVE void drawMandelbrot(int canvasWidth, int canvasHeight, int maxIterations) {
         const double scaleX = 3.5 / canvasWidth;
         const double scaleY = 2.0 / canvasHeight;
@@ -123,7 +138,12 @@ extern "C" {
         {
             for(int j = 0; j < canvasWidth; j++)
             {
-                drawRectangleOnCanvas2(j,i,1,1,mandelbrotSet[j][i]);
+                 std::vector<int> color = escapeTimeToRGB(mandelbrotSet[j][i], maxIterations);
+                 int r = color[0];
+                 int g = color[1];
+                 int b = color[2];
+
+                drawRectangleOnCanvas2(j,i,1,1,r,g,b);
             }
         }
 
