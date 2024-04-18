@@ -1,6 +1,10 @@
 #include <emscripten.h>
 #include <cstdlib> // for rand() and srand()
 #include <ctime>   // for time()
+#include <cmath>
+#include <iostream>
+#include <vector>
+#include <complex>
 
 // Function to convert integer to string
 void intToString(int value, char* result) {
@@ -29,9 +33,22 @@ void intToString(int value, char* result) {
 extern "C" {
     EMSCRIPTEN_KEEPALIVE void drawRectangleOnCanvas(int x, int y, int width, int height, const char* color) {
         EM_ASM_({
+            if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + $4);
             var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = UTF8ToString($4);
+            ctx.fillRect($0, $1, $2, $3);
+        }, x, y, width, height, color);
+    }
+    EMSCRIPTEN_KEEPALIVE void drawRectangleOnCanvas2(int x, int y, int width, int height, int color) {
+        EM_ASM_({
+            // if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + $4);
+            var canvas = document.getElementById('myCanvas');
+            var ctx = canvas.getContext('2d');
+
+            var rgbValue = Math.floor(255 * $4);
+            ctx.fillStyle = 'rgb(' + rgbValue + ',' + rgbValue + ',' + rgbValue + ')';
+            // if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + ctx.fillStyle);
             ctx.fillRect($0, $1, $2, $3);
         }, x, y, width, height, color);
     }
@@ -76,5 +93,40 @@ extern "C" {
         //             drawRectangleOnCanvas(x, y, width, height, color);
         //     }
         // }
+    }
+
+    EMSCRIPTEN_KEEPALIVE int mandelbrot(const std::complex<double>& c, int maxIterations) {
+        std::complex<double> z = 0;
+        int n = 0;
+        while (abs(z) <= 2 && n < maxIterations) {
+            z = z * z + c;
+            n++;
+        }
+        return n;
+    }
+
+    EMSCRIPTEN_KEEPALIVE void drawMandelbrot(int canvasWidth, int canvasHeight, int maxIterations) {
+        const double scaleX = 3.5 / canvasWidth;
+        const double scaleY = 2.0 / canvasHeight;
+        const double centerX = -0.7;
+        const double centerY = 0;
+        std::vector<std::vector<int>> mandelbrotSet(canvasHeight, std::vector<int>(canvasWidth));
+
+        for (int y = 0; y < canvasHeight; ++y) {
+            for (int x = 0; x < canvasWidth; ++x) {
+                std::complex<double> c(centerX + (x - canvasWidth / 2) * scaleX, centerY + (y - canvasHeight / 2) * scaleY);
+                mandelbrotSet[y][x] = mandelbrot(c,maxIterations);
+            }
+        }
+
+        for(int i = 0; i < canvasHeight; i++)
+        {
+            for(int j = 0; j < canvasWidth; j++)
+            {
+                drawRectangleOnCanvas2(j,i,1,1,mandelbrotSet[j][i]);
+            }
+        }
+
+       
     }
 }

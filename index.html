@@ -6,13 +6,18 @@
     <title>Canvas Example</title>
 </head>
 <body>
-    <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas>
+    <!-- <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas> -->
+    <canvas id="myCanvas" width="1600" height="1200" style="border:1px solid black;"></canvas>
     <script src="draw.js"></script>
     <script>
         function drawRectangles() {
             Module.ccall('drawRandomRectangles', 'void', ['number', 'number', 'number'], [100, 3200, 1600]);
         }
+        function drawMandelbrot() {
+            Module.ccall('drawMandelbrot', 'void', ['number', 'number', 'number'], [1600, 1200, 1000]);
+        }
     </script>
     <button onclick="drawRectangles()">Draw Rectangle</button>
+    <button onclick="drawMandelbrot()">Draw Fractals</button>
 </body>
 </html>

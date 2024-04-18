@@ -9,7 +9,7 @@ git pull
 --> then switch to the directory for input and putput files
 
 Build simple WASM from C++:
-emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXPORTED_RUNTIME_METHODS='["ccall"]'
+emcc draw.cpp -o draw.js -s EXPORTED_FUNCTIONS='["_drawRectangleOnCanvas"]' -s EXPORTED_RUNTIME_METHODS='["ccall"]' -s ALLOW_MEMORY_GROWTH=1
 
 Python server to serve as website at  http://localhost:8000/
 python -m http.server 8000
