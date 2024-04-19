@@ -903,7 +903,7 @@ function dbg(...args) {
 
 var ASM_CONSTS = {
   66476: ($0, $1, $2, $3, $4) => { if($0 < 100) console.log("p: " + $0 + " " + $1 + " " + $4); var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = UTF8ToString($4); ctx.fillRect($0, $1, $2, $3); },  
- 66689: ($0, $1, $2, $3, $4, $5, $6) => { var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = 'rgb(' + $4 + ',' + $5 + ',' + $6 + ')'; ctx.fillRect($0, $1, $2, $3); }
+ 66689: ($0, $1, $2, $3, $4, $5, $6, $7) => { if($7 > 0.0) alert("time elapsed: " + $7); var canvas = document.getElementById('myCanvas'); var ctx = canvas.getContext('2d'); ctx.fillStyle = 'rgb(' + $4 + ',' + $5 + ',' + $6 + ')'; ctx.fillRect($0, $1, $2, $3); }
 };
 
 // end include: preamble.js
@@ -1513,7 +1513,7 @@ var wasmImports = {
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
 var _drawRectangleOnCanvas = Module['_drawRectangleOnCanvas'] = createExportWrapper('drawRectangleOnCanvas', 5);
-var _drawRectangleOnCanvas2 = Module['_drawRectangleOnCanvas2'] = createExportWrapper('drawRectangleOnCanvas2', 7);
+var _drawRectangleOnCanvas2 = Module['_drawRectangleOnCanvas2'] = createExportWrapper('drawRectangleOnCanvas2', 8);
 var _drawRandomRectangles = Module['_drawRandomRectangles'] = createExportWrapper('drawRandomRectangles', 3);
 var _mandelbrot = Module['_mandelbrot'] = createExportWrapper('mandelbrot', 3);
 var _escapeTimeToRGB = Module['_escapeTimeToRGB'] = createExportWrapper('escapeTimeToRGB', 3);

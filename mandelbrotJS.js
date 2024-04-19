@@ -22,9 +22,11 @@ function drawMandelbrot(canvaswidth, canvasheight, iterations) {
     height = canvasheight;
     maxIterations = iterations;
 
-    const rows = width;
-    const cols = height;
+    const rows = height;
+    const cols = width;
     const mandelbrotSet = createEmptyArray(rows, cols);
+    const startTime = performance.now();
+
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const real = (x - width / 2) * 4 / width;
@@ -32,6 +34,9 @@ function drawMandelbrot(canvaswidth, canvasheight, iterations) {
             mandelbrotSet[y][x] = mandelbrot(real, imag);
         }
     }
+    const endTime = performance.now();
+    const elapsedTime = endTime-startTime;
+    alert(elapsedTime);
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
             const color = escapeTimeToRGB(mandelbrotSet[i][j], maxIterations);
