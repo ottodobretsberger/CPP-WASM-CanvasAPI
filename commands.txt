@@ -27,4 +27,15 @@ git push -u origin master
 
 UNDO:
 git reset --hard HEAD
+--------------------------------------------------------------------------
+optimizations:
 
+s2wasm --import-memory
+wasm-opt -O3
+create large array with random numbers and calculate average
+
+https://stackoverflow.com/questions/48173979/why-is-webassembly-function-almost-300-time-slower-than-same-js-function
+
+http://link.crwd.fr/45ZL#https://blog.acolyer.org/2017/09/18/bringing-the-web-up-to-speed-with-webassembly/?utm_campaign=crowdfire&utm_content=crowdfire&utm_medium=social&utm_source=twitter
+
+https://pspdfkit.com/blog/2017/webassembly-a-new-hope/
