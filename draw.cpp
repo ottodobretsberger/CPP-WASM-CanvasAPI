@@ -114,6 +114,9 @@ extern "C" {
     EMSCRIPTEN_KEEPALIVE void escapeTimeToRGB(int escapeTime, int maxIterations, int result [3]) {
     if (escapeTime == maxIterations) {
         // Point is inside the Mandelbrot set, color it black
+        result[0] = 0;
+        result[1] = 0;
+        result[2] = 0;
         return;
     } else {
         // return {255, 255, 255};
@@ -129,6 +132,7 @@ extern "C" {
     EMSCRIPTEN_KEEPALIVE void drawMandelbrot(int canvasWidth, int canvasHeight, int maxIterations) {
         const int rows = canvasHeight;
         const int cols = canvasWidth;
+        // static int mandelbrotSet[1600][1200];
         std::vector<std::vector<int>> mandelbrotSet(rows, std::vector<int>(cols));
         unsigned int t0 = clock();
         for (int y = 0; y < canvasHeight; y++) {
