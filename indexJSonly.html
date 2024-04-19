@@ -6,7 +6,9 @@
     <title>Canvas Example</title>
 </head>
 <body>
-    <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas>
+    <!-- <canvas id="myCanvas" width="3200" height="1600" style="border:1px solid black;"></canvas> -->
+    <canvas id="myCanvas" width="1600" height="1200" style="border:1px solid black;"></canvas>
+    <script src="mandelbrotJS.js"></script>
     <script>
         function drawRectangles() {
             for(let i = 0; i < 3200; i+=4)
@@ -26,5 +28,6 @@
         }
     </script>
     <button onclick="drawRectangles()">Draw Rectangle</button>
+    <button onclick="drawMandelbrot(1600,1200,1000)">Draw Fractals</button>
 </body>
 </html>

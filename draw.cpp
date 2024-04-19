@@ -112,7 +112,7 @@ extern "C" {
     } else {
         // Map escape time to a color gradient
         double t = static_cast<double>(escapeTime) / maxIterations;
-        // Example: Linear gradient from blue to white
+        
         int red = static_cast<int>(255 * (1 - t));
         int green = static_cast<int>(255 * (1 - t));
         int blue = static_cast<int>(255 * t);
