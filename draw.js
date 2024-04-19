@@ -1515,7 +1515,7 @@ var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
 var _drawRectangleOnCanvas = Module['_drawRectangleOnCanvas'] = createExportWrapper('drawRectangleOnCanvas', 5);
 var _drawRectangleOnCanvas2 = Module['_drawRectangleOnCanvas2'] = createExportWrapper('drawRectangleOnCanvas2', 7);
 var _drawRandomRectangles = Module['_drawRandomRectangles'] = createExportWrapper('drawRandomRectangles', 3);
-var _mandelbrot = Module['_mandelbrot'] = createExportWrapper('mandelbrot', 2);
+var _mandelbrot = Module['_mandelbrot'] = createExportWrapper('mandelbrot', 3);
 var _escapeTimeToRGB = Module['_escapeTimeToRGB'] = createExportWrapper('escapeTimeToRGB', 3);
 var _drawMandelbrot = Module['_drawMandelbrot'] = createExportWrapper('drawMandelbrot', 3);
 var _fflush = createExportWrapper('fflush', 1);

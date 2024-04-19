@@ -25,11 +25,11 @@ function drawMandelbrot(canvaswidth, canvasheight, iterations) {
     const rows = width;
     const cols = height;
     const mandelbrotSet = createEmptyArray(rows, cols);
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
             const real = (x - width / 2) * 4 / width;
             const imag = (y - height / 2) * 4 / width;
-            mandelbrotSet[x][y] = mandelbrot(real, imag);
+            mandelbrotSet[y][x] = mandelbrot(real, imag);
         }
     }
     for (let i = 0; i < height; i++) {

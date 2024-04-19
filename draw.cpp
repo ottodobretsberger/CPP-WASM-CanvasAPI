@@ -95,14 +95,19 @@ extern "C" {
         // }
     }
 
-    EMSCRIPTEN_KEEPALIVE int mandelbrot(const std::complex<double>& c, int maxIterations) {
-        std::complex<double> z = 0;
-        int n = 0;
-        while (abs(z) <= 2 && n < maxIterations) {
-            z = z * z + c;
-            n++;
+    EMSCRIPTEN_KEEPALIVE int mandelbrot(float x, float y, int maxIterations) {
+        float real = x;
+        float imag = y;
+        for (int i = 0; i < maxIterations; i++) {
+            const float real2 = real * real;
+            const float imag2 = imag * imag;
+            if (real2 + imag2 > 4) {
+                return i;
+            }
+            imag = 2 * real * imag + y;
+            real = real2 - imag2 + x;
         }
-        return n;
+        return maxIterations;
     }
 
     EMSCRIPTEN_KEEPALIVE std::vector<int> escapeTimeToRGB(int escapeTime, int maxIterations) {
@@ -110,43 +115,38 @@ extern "C" {
         // Point is inside the Mandelbrot set, color it black
         return {0, 0, 0};
     } else {
+        // return {255, 255, 255};
         // Map escape time to a color gradient
-        double t = static_cast<double>(escapeTime) / maxIterations;
+        float t = static_cast<double>(escapeTime) / static_cast<double>(maxIterations);
         
-        int red = static_cast<int>(255 * (1 - t));
-        int green = static_cast<int>(255 * (1 - t));
+        int red = static_cast<int>(255 * (1.0 - t));
+        int green = static_cast<int>(255 * (1.0 - t));
         int blue = static_cast<int>(255 * t);
         return {red, green, blue};
     }
 }
 
     EMSCRIPTEN_KEEPALIVE void drawMandelbrot(int canvasWidth, int canvasHeight, int maxIterations) {
-        const double scaleX = 3.5 / canvasWidth;
-        const double scaleY = 2.0 / canvasHeight;
-        const double centerX = -0.7;
-        const double centerY = 0;
-        std::vector<std::vector<int>> mandelbrotSet(canvasHeight, std::vector<int>(canvasWidth));
-
-        for (int y = 0; y < canvasHeight; ++y) {
-            for (int x = 0; x < canvasWidth; ++x) {
-                std::complex<double> c(centerX + (x - canvasWidth / 2) * scaleX, centerY + (y - canvasHeight / 2) * scaleY);
-                mandelbrotSet[y][x] = mandelbrot(c,maxIterations);
+        const int rows = canvasHeight;
+        const int cols = canvasWidth;
+        std::vector<std::vector<int>> mandelbrotSet(rows, std::vector<int>(cols));
+        for (int y = 0; y < canvasHeight; y++) {
+            for (int x = 0; x < canvasWidth; x++) {
+                const float real = ((float)x - canvasWidth / 2) * 4 / canvasWidth;
+                const float imag = ((float)y - canvasHeight / 2) * 4 / canvasWidth;
+                mandelbrotSet[y][x] = mandelbrot(real, imag, maxIterations);
             }
         }
+        for (int i = 0; i < canvasHeight; i++) {
+            for (int j = 0; j < canvasWidth; j++) {
+                const std::vector<int> color = escapeTimeToRGB(mandelbrotSet[i][j], maxIterations);
+                
+                const int r = color[0];
+                const int g = color[1];
+                const int b = color[2];
 
-        for(int i = 0; i < canvasHeight; i++)
-        {
-            for(int j = 0; j < canvasWidth; j++)
-            {
-                 std::vector<int> color = escapeTimeToRGB(mandelbrotSet[j][i], maxIterations);
-                 int r = color[0];
-                 int g = color[1];
-                 int b = color[2];
-
-                drawRectangleOnCanvas2(j,i,1,1,r,g,b);
+                drawRectangleOnCanvas2(j, i, 1, 1, r, g, b);
             }
         }
-
-       
     }
 }
