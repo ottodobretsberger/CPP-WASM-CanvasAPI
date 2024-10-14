@@ -1,4 +1,4 @@
-------------------------
+------------------------ 
 inside emsdk directory:
 ------------------------
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
