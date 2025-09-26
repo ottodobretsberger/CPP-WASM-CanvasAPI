@@ -71,91 +71,69 @@ extern "C" {
                  drawRectangleOnCanvas(i, j, width, height, color);
             }
         }
-
-        // for(int i = 0; i < 30; i++)
-        // {
-        //     for (int i = 0; i < numRectangles; ++i) {
-        //             int x = rand() % canvasWidth;     // Random x-coordinate
-        //             int y = rand() % canvasHeight;    // Random y-coordinate
-        //             int width = rand() % 50 + 10 ;     // Random width between 10 and 70
-        //             int height = rand() % 50 + 10;    // Random height between 10 and 70
-
-        //             // Generate a random color in RGB format
-        //             char color[20]; // Sufficient size for the color string
-        //             color[0] = 'r'; color[1] = 'g'; color[2] = 'b'; color[3] = '(';
-        //             intToString(rand() % 256, color + 4); // Red component
-        //             color[6] = ',';
-        //             intToString(rand() % 256, color + 7); // Green component
-        //             color[9] = ',';
-        //             intToString(rand() % 256, color + 10); // Blue component
-        //             color[12] = ')';
-        //             color[13] = '\0';
-                    
-        //             drawRectangleOnCanvas(x, y, width, height, color);
-        //     }
-        // }
     }
 
     EMSCRIPTEN_KEEPALIVE int mandelbrot(float x, float y, int maxIterations) {
         float real = x;
         float imag = y;
         for (int i = 0; i < maxIterations; i++) {
-            const float real2 = real * real;
-            const float imag2 = imag * imag;
-            if (real2 + imag2 > 4) {
+            float real2 = real * real;
+            float imag2 = imag * imag;
+            if (real2 + imag2 > 4.0f) {
                 return i;
             }
-            imag = 2 * real * imag + y;
+            imag = 2.0f * real * imag + y;
             real = real2 - imag2 + x;
         }
         return maxIterations;
     }
 
-    EMSCRIPTEN_KEEPALIVE void escapeTimeToRGB(int escapeTime, int maxIterations, int result [3]) {
-    if (escapeTime == maxIterations) {
-        // Point is inside the Mandelbrot set, color it black
-        result[0] = 0;
-        result[1] = 0;
-        result[2] = 0;
-        return;
-    } else {
-        // return {255, 255, 255};
-        // Map escape time to a color gradient
-        float t = static_cast<double>(escapeTime) / static_cast<double>(maxIterations);
-        
-        result[0] = static_cast<int>(255 * (1.0 - t));
-        result[1] = static_cast<int>(255 * (1.0 - t));
-        result[2] = static_cast<int>(255 * t);
+    EMSCRIPTEN_KEEPALIVE void escapeTimeToRGB(int escapeTime, int maxIterations, uint8_t* data, int offset) {
+        if (escapeTime == maxIterations) {
+            data[offset] = data[offset + 1] = data[offset + 2] = 0;
+            data[offset + 3] = 255;
+        } else {
+            float t = (float)escapeTime / (float)maxIterations;
+            data[offset]     = (uint8_t)(255 * (1.0f - t));
+            data[offset + 1] = (uint8_t)(255 * (1.0f - t));
+            data[offset + 2] = (uint8_t)(255 * t);
+            data[offset + 3] = 255;
+        }
     }
-}
 
     EMSCRIPTEN_KEEPALIVE void drawMandelbrot(int canvasWidth, int canvasHeight, int maxIterations) {
-        const int rows = canvasHeight;
-        const int cols = canvasWidth;
-        // static int mandelbrotSet[1600][1200];
-        std::vector<std::vector<int>> mandelbrotSet(rows, std::vector<int>(cols));
-        unsigned int t0 = clock();
-        for (int y = 0; y < canvasHeight; y++) {
-            for (int x = 0; x < canvasWidth; x++) {
-                const float real = ((float)x - canvasWidth / 2) * 4 / canvasWidth;
-                const float imag = ((float)y - canvasHeight / 2) * 4 / canvasWidth;
-                mandelbrotSet[y][x] = mandelbrot(real, imag, maxIterations);
-            }
-        }
-        unsigned int t1 = clock();
-        float clockTime = (t1 - t0)*1000.0 / CLOCKS_PER_SEC;
-        for (int i = 0; i < canvasHeight; i++) {
-            for (int j = 0; j < canvasWidth; j++) {
-                int color [3] = {0,0,0};
-                escapeTimeToRGB(mandelbrotSet[i][j], maxIterations, color);
-                
-                const int r = color[0];
-                const int g = color[1];
-                const int b = color[2];
+        int size = canvasWidth * canvasHeight * 4;
+        uint8_t* buffer = (uint8_t*)malloc(size);
 
-                drawRectangleOnCanvas2(j, i, 1, 1, r, g, b, clockTime);
-                clockTime = 0.0;
+        float scale = 4.0f / canvasWidth;
+        float xOffset = -canvasWidth / 2.0f;
+        float yOffset = -canvasHeight / 2.0f;
+
+        clock_t t0 = clock();
+
+        int idx = 0;
+        for (int y = 0; y < canvasHeight; y++) {
+            float imag = (y + yOffset) * scale;
+            for (int x = 0; x < canvasWidth; x++) {
+                float real = (x + xOffset) * scale;
+                int escape = mandelbrot(real, imag, maxIterations);
+                escapeTimeToRGB(escape, maxIterations, buffer, idx);
+                idx += 4;
             }
         }
+
+        clock_t t1 = clock();
+        float elapsed = (t1 - t0) * 1000.0 / CLOCKS_PER_SEC;
+        EM_ASM_({
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+            const imgData = ctx.createImageData($0, $1);
+            const buffer = HEAPU8.subarray($2, $2 + $0 * $1 * 4);
+            imgData.data.set(buffer);
+            ctx.putImageData(imgData, 0, 0);
+            alert("WASM Time: " + $3);
+        }, canvasWidth, canvasHeight, buffer, elapsed);
+
+        free(buffer);
     }
 }
